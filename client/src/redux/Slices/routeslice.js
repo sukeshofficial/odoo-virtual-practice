@@ -26,6 +26,11 @@ const initialState = {
   message: "Backend status not checked yet",
   timestamp: null,
   uptime: 0,
+  memory: null,
+  streamConnected: false,
+  connectionState: "disconnected", // 'connected' | 'connecting' | 'disconnected'
+  lastUpdated: null,
+  isStale: false,
 };
 
 const healthSlice = createSlice({
@@ -33,6 +38,20 @@ const healthSlice = createSlice({
   initialState,
   reducers: {
     resetHealth: () => initialState,
+    updateLiveHealth: (state, action) => {
+      Object.assign(state, action.payload);
+      state.streamConnected = true;
+      state.connectionState = "connected";
+      state.lastUpdated = new Date().toISOString();
+      state.isStale = false;
+    },
+    setStreamConnection: (state, action) => {
+      state.connectionState = action.payload;
+      state.streamConnected = action.payload === "connected";
+      if (action.payload === "disconnected" || action.payload === "connecting") {
+        state.isStale = true;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -42,6 +61,8 @@ const healthSlice = createSlice({
       })
       .addCase(checkHealth.fulfilled, (state, action) => {
         Object.assign(state, action.payload);
+        state.lastUpdated = new Date().toISOString();
+        state.isStale = false;
       })
       .addCase(checkHealth.rejected, (state, action) => {
         state.success = false;
@@ -52,6 +73,6 @@ const healthSlice = createSlice({
   },
 });
 
-export const { resetHealth } = healthSlice.actions;
+export const { resetHealth, updateLiveHealth, setStreamConnection } = healthSlice.actions;
 
 export default healthSlice.reducer;

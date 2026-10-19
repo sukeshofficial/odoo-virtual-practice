@@ -9,8 +9,8 @@ function App() {
        
      <BrowserRouter>
       
-         <Routes >
-               <Route path='dev/health/status' element={   <HealthStatus/>}/>
+         <Routes>
+           <Route path="/dev/health/status" element={<HealthStatus />} />
          </Routes>
       
      </BrowserRouter>
