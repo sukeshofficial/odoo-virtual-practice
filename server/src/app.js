@@ -4,6 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import healthRoutes from "./routes/health.routes.js";
+import testInputRoutes from "./routes/testInput.routes.js";
 
 const app = express();
 
@@ -21,6 +22,8 @@ app.use(morgan("dev"));
 
 // API routes
 app.use("/api/v1/health", healthRoutes);
+app.use("/api/v1/test-input", testInputRoutes);
+
 
 // Handle unknown routes
 app.use((req, res) => {
