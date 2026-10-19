@@ -59,6 +59,30 @@ function HealthStatus() {
     };
   }, [dispatch]);
 
+  const getStreamBadgeStyle = () => {
+    if (isLive) return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30";
+    if (isConnecting) return "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30";
+    return "bg-muted text-muted-foreground border-border";
+  };
+
+  const getStreamDotStyle = () => {
+    if (isLive) return "bg-emerald-500 animate-pulse";
+    if (isConnecting) return "bg-amber-500 animate-ping";
+    return "bg-muted-foreground";
+  };
+
+  const getStreamLabel = () => {
+    if (isLive) return "LIVE";
+    if (isConnecting) return "RECONNECTING";
+    return "OFFLINE";
+  };
+
+  const getHealthBadgeStyle = () => {
+    if (isHealthy) return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30";
+    if (isUnhealthy) return "bg-destructive/10 text-destructive border-destructive/30";
+    return "bg-muted text-muted-foreground border-border";
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 transition-colors duration-200">
       <div className="w-full max-w-md bg-card text-card-foreground border border-border rounded-xl shadow-sm p-6 space-y-6">
@@ -81,22 +105,12 @@ function HealthStatus() {
                 </h2>
                 {/* Live stream badge */}
                 <span
-                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide border ${isLive
-                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
-                    : isConnecting
-                      ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30"
-                      : "bg-muted text-muted-foreground border-border"
-                    }`}
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide border ${getStreamBadgeStyle()}`}
                 >
                   <span
-                    className={`size-1.5 rounded-full ${isLive
-                      ? "bg-emerald-500 animate-pulse"
-                      : isConnecting
-                        ? "bg-amber-500 animate-ping"
-                        : "bg-muted-foreground"
-                      }`}
+                    className={`size-1.5 rounded-full ${getStreamDotStyle()}`}
                   />
-                  {isLive ? "LIVE" : isConnecting ? "RECONNECTING" : "OFFLINE"}
+                  {getStreamLabel()}
                 </span>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
@@ -107,12 +121,7 @@ function HealthStatus() {
 
           <div className="flex items-center gap-2">
             <span
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${isHealthy
-                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
-                : isUnhealthy
-                  ? "bg-destructive/10 text-destructive border-destructive/30"
-                  : "bg-muted text-muted-foreground border-border"
-                }`}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${getHealthBadgeStyle()}`}
             >
               {isHealthy && <CheckCircle2 className="size-3.5 text-emerald-500" />}
               {isUnhealthy && <XCircle className="size-3.5 text-destructive" />}
@@ -124,6 +133,7 @@ function HealthStatus() {
 
           </div>
         </div>
+
 
         {/* Status Details */}
         <div className="rounded-lg border border-border bg-muted/40 divide-y divide-border text-sm">

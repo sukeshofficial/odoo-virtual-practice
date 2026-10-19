@@ -39,53 +39,73 @@ function Justinput() {
   };
 
   return (
-    <div className="p-4">
-      <Input
-        placeholder="Enter text"
-        className="w-[200px] h-[40px] mt-4 ml-2"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-card text-card-foreground border border-border rounded-xl shadow-sm p-6 space-y-6">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight">Test Input</h1>
+          <p className="text-xs text-muted-foreground mt-1">
+            Enter a name to save it to MongoDB and view recorded inputs.
+          </p>
+        </div>
 
-      <Button
-        variant="outline"
-        onClick={handleSubmit}
-        disabled={loading}
-        className="w-[150px] h-10 font-medium transition-all shadow-xs ml-4 bg-black text-white"
-      >
-        {loading ? "Saving..." : "Click"}
-      </Button>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+          className="flex items-center gap-2"
+        >
+          <Input
+            placeholder="Enter text..."
+            className="flex-1"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-      {error && (
-        <p className="mt-2 text-sm text-red-500">{error}</p>
-      )}
+          <Button
+            type="submit"
+            disabled={loading || !name.trim()}
+          >
+            {loading ? "Saving..." : "Submit"}
+          </Button>
+        </form>
 
-      {success && (
-        <p className="mt-2 text-sm text-green-600">
-          Input created successfully!
-        </p>
-      )}
-
-      {/* GET API: Render saved names */}
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold">Saved Names</h2>
-
-        {loading && <p>Loading names...</p>}
-
-        {!loading && inputs.length === 0 && (
-          <p className="mt-2 text-gray-500">No names found.</p>
+        {error && (
+          <p className="text-xs text-destructive font-medium">{error}</p>
         )}
 
-        <ul className="mt-3 space-y-2">
-          {inputs.map((item) => (
-            <li
-              key={item._id || item.id}
-              className="rounded-md border p-3"
-            >
-              {item.name}
-            </li>
-          ))}
-        </ul>
+        {success && (
+          <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+            Input created successfully!
+          </p>
+        )}
+
+        {/* GET API: Render saved names */}
+        <div className="pt-4 border-t border-border space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold">Saved Names</h2>
+            <span className="text-xs text-muted-foreground">
+              {inputs.length} {inputs.length === 1 ? "record" : "records"}
+            </span>
+          </div>
+
+          {loading && <p className="text-xs text-muted-foreground">Loading names...</p>}
+
+          {!loading && inputs.length === 0 && (
+            <p className="text-xs text-muted-foreground">No names found.</p>
+          )}
+
+          <ul className="max-h-60 overflow-y-auto space-y-2">
+            {inputs.map((item) => (
+              <li
+                key={item._id || item.id}
+                className="rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs font-medium"
+              >
+                {item.name}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

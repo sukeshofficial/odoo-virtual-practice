@@ -1,4 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+
+
 
 const ThemeContext = createContext({
   theme: "light",
@@ -29,13 +31,13 @@ export function ThemeProvider({
     root.classList.add(effectiveTheme);
   }, [theme]);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setTheme((prev) => {
       const nextTheme = prev === "dark" ? "light" : "dark";
       localStorage.setItem(storageKey, nextTheme);
       return nextTheme;
     });
-  };
+  }, [storageKey]);
 
   // Keyboard shortcut: Press 'd' or 'D' to toggle dark/light mode
   useEffect(() => {
@@ -59,16 +61,21 @@ export function ThemeProvider({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [toggleTheme]);
 
-  const value = {
-    theme,
-    setTheme: (newTheme) => {
-      localStorage.setItem(storageKey, newTheme);
-      setTheme(newTheme);
-    },
-    toggleTheme,
-  };
+  const value = useMemo(
+    () => ({
+      theme,
+      setTheme: (newTheme) => {
+        localStorage.setItem(storageKey, newTheme);
+        setTheme(newTheme);
+      },
+      toggleTheme,
+    }),
+    [theme, storageKey, toggleTheme]
+  );
+
+
 
   return (
     <ThemeContext.Provider value={value}>
