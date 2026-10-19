@@ -51,7 +51,7 @@ function Justinput() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleSubmit();
+            void handleSubmit();
           }}
           className="flex items-center gap-2"
         >
