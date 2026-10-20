@@ -4,6 +4,7 @@ import store from "./redux/Store"
 import { Provider } from "react-redux"
 import HealthStatus from "./components/health/health"
 import Justinput from "./components/justinput/input"
+import ComponentTestBed from "./components/test/ComponentTestBed"
 
 
 
@@ -16,6 +17,7 @@ function App() {
          <Routes>
            <Route path="/dev/health/status" element={<HealthStatus />} />
            <Route path="/dev/input" element={<Justinput/> } />
+           <Route path="/test/components/ui" element={<ComponentTestBed />} />
          </Routes>
       
      </BrowserRouter>
